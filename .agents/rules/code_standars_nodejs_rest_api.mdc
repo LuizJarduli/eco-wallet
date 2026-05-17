@@ -1,0 +1,56 @@
+---
+description: Node.js HTTP REST API code standards
+globs: **/*.{ts,js}
+alwaysApply: false
+---
+
+# Node.js REST API Standards
+
+- Prefer TypeScript for new API code. Keep modules small, explicit, and easy to test.
+- Follow KISS, DRY, and SOLID without adding framework layers before they solve a real problem.
+- Use `camelCase` for variables and functions, `PascalCase` for classes and types, and `SCREAMING_SNAKE_CASE` for environment constants.
+- Keep HTTP concerns, validation, business logic, and persistence separated.
+- Avoid hidden side effects in shared helpers. Make dependencies explicit through parameters or lightweight dependency injection.
+
+## API Structure
+
+Organize code by feature when the API grows beyond a few routes:
+
+```text
+src/
+  core/
+    config/
+    errors/
+    http/
+    logger/
+    middleware/
+  features/
+    wallets/
+      wallet.routes.ts
+      wallet.controller.ts
+      wallet.service.ts
+      wallet.repository.ts
+      wallet.schema.ts
+      wallet.types.ts
+```
+
+- Routes define paths and middleware only.
+- Controllers translate HTTP requests and responses.
+- Services hold business rules.
+- Repositories own database or external persistence access.
+- Schemas validate request params, query strings, bodies, and external payloads.
+
+## REST Behavior
+
+- Use nouns for resources and standard HTTP methods: `GET`, `POST`, `PUT`, `PATCH`, and `DELETE`.
+- Return consistent JSON envelopes for success and failure based on the existing project pattern.
+- Use correct status codes: `200`, `201`, `204`, `400`, `401`, `403`, `404`, `409`, `422`, and `500`.
+- Validate all external input at the API boundary before calling services.
+- Do not leak stack traces, database errors, secrets, or internal implementation details in responses.
+
+## Errors, Logging, And Tests
+
+- Use typed application errors with stable codes for expected failures.
+- Log with request context and correlation IDs when available. Never log secrets, tokens, passwords, or full payment data.
+- Keep handlers async-safe and forward unexpected errors to centralized error middleware.
+- Add focused tests for controllers, services, repositories, validation, auth/authorization, and important error paths.

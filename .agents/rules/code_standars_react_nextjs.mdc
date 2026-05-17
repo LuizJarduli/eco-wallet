@@ -1,0 +1,53 @@
+---
+description: React and Next.js code standards
+globs: **/*.{tsx,jsx}
+alwaysApply: false
+---
+
+# React And Next.js Standards
+
+- Prefer TypeScript, functional components, hooks, and composition over inheritance.
+- Keep components small and focused. Extract reusable UI into colocated components only when reuse or readability justifies it.
+- Use `PascalCase` for components, `camelCase` for functions and variables, and `kebab-case` or `snake_case` only when required by framework conventions.
+- Prefer server components by default in Next.js App Router. Add `"use client"` only when using browser APIs, state, effects, or client-only libraries.
+- Keep data fetching close to the route or server component that owns it. Avoid fetching the same data in multiple nested components.
+
+# Feature-First Structure
+
+Organize app code by feature before technical layer:
+
+```text
+src/
+  app/
+  core/
+    config/
+    constants/
+    lib/
+    styles/
+    ui/
+  features/
+    wallet/
+      api/
+      components/
+      hooks/
+      schemas/
+      services/
+      types/
+```
+
+- Put shared UI and utilities in `core/` only when they are genuinely reusable across features.
+- Keep feature-specific components, hooks, schemas, and services inside the feature folder.
+- Do not create empty layers or generic abstractions before they are needed.
+
+# State And Data
+
+- Keep local UI state in React state. Use URL state for shareable filters, tabs, pagination, and search.
+- Use server actions, route handlers, or typed service functions for mutations depending on the existing project pattern.
+- Validate external input and form data with schemas before using it.
+- Prefer explicit loading, empty, error, and success states in user-facing flows.
+- Avoid side effects inside render. Keep effects minimal and tied to external systems.
+
+# Testing
+
+- Add focused tests for complex components, hooks, services, and important routes.
+- Prefer tests that exercise user behavior and observable output instead of implementation details.

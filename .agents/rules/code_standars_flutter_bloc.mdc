@@ -1,0 +1,67 @@
+---
+description: Flutter code standards using feature-first architecture with BLoC
+globs: apps/mobile/**/*.dart
+alwaysApply: false
+---
+
+# Flutter Code Standards
+
+- Follow Effective Dart, `flutter_lints`, KISS, DRY, and SOLID without adding abstractions before they are needed.
+- Prefer immutable models, `final` fields, `const` constructors, and small widgets with clear responsibilities.
+- Keep UI, state management, domain logic, and data access separated. Do not call APIs, databases, or repositories directly from widgets.
+- Use meaningful names that describe intent. Avoid abbreviations except common Flutter/Dart terms.
+- Keep functions short and focused. Extract private helpers or widgets when a build method becomes hard to scan.
+- Technical debt should be addressed.
+- Use dart-doc for documentation. Use @override for overrides.
+
+## Feature-First Structure
+
+Organize code by feature before layer:
+
+```text
+lib/
+  core/
+    constants/
+    errors/
+    routing/
+    theme/
+    utils/
+    widgets/
+  features/
+    wallet/
+      data/
+        datasources/
+        models/
+        repositories/
+      domain/
+        entities/
+        repositories/
+        usecases/
+      presentation/
+        bloc/
+        pages/
+        widgets/
+```
+
+- Put shared, reusable app code in `core/`. Keep feature-specific code inside its feature folder.
+- Name files with `snake_case.dart`. Name classes with `PascalCase`.
+- Do not create layer folders that have no real code yet.
+
+## BLoC Standards
+
+- Use BLoC/Cubit for presentation state. Keep business rules in use cases or services, not inside widgets.
+- Use events for user or lifecycle intent, states for renderable UI outcomes, and repositories for data boundaries.
+- Keep states explicit: `initial`, `loading`, `success`, `empty`, and `failure` when they represent distinct UI.
+- Prefer immutable state classes with value equality (`Equatable` or generated value types when already used by the project).
+- Widgets should read state with `BlocBuilder`, trigger side effects with `BlocListener`, and avoid dispatching events from `build`.
+
+## Testing
+
+- Add focused tests for BLoCs/Cubits, use cases, repositories, and complex widgets.
+- Mock only external boundaries. Prefer real value objects and simple fakes for local domain logic.
+- Mocks should be named `Mock<Class>`.
+- Use a __mocks__ folder to store mocks, inside tests folder.
+- Use `package:mocktail` for mocks.
+- Use `package:flutter_test` for testing.
+- Use `package:bloc_test` for testing of blocs and cubit.
+- Use AAA pattern for tests.
