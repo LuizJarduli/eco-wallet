@@ -29,6 +29,38 @@ Read the relevant rule before editing files in that stack:
 
 If multiple rules match, apply the most specific one for the files being edited. For example, use the Next.js rule for frontend `tsx` files and the Node.js REST API rule for backend API handlers or services.
 
+## Pull Request and Review Workflow
+
+  For creating PRs, running review rounds, or fixing review feedback, use the dedicated PR/review skill under `.agents/skills/`.
+  Never commit, push, create a PR, or change Linear statuses unless the user explicitly asks. Before claiming completion, run the relevant verification and use `cy-final-verify` when fresh evidence is required.
+
+  Then the skill can contain the real automation:
+
+## PR and Compozy Review Workflow
+
+  Use when the user asks to create a PR, prepare work for review, run a Compozy review round, or fix review feedback.
+
+  1. Read `AGENTS.md`.
+  2. Run fresh verification through `cy-final-verify`.
+  3. Inspect `git status`, `git diff`, and recent `git log`.
+  4. Commit only if explicitly requested.
+  5. Push only if explicitly requested or required for PR creation.
+  6. Create the PR with `gh pr create` or GitHub MCP.
+  7. Include:
+     - Summary
+     - Test plan
+     - Linear issue links
+     - Compozy task path
+  8. Run `/cy-review-round` for local AI review or `compozy reviews fetch` for external provider feedback.
+  9. Use `cy-fix-reviews` to resolve review issue files.
+  10. Re-run verification before reporting completion.
+
+## Design System
+
+- Before creating or changing UI, visual components, layout, colors, typography, spacing, or interaction states, read `DESIGN.md`.
+- Use `DESIGN.md` as the source of truth for design-system development and keep new UI aligned with its tokens, component guidance, and visual direction.
+- If a requested UI change conflicts with `DESIGN.md`, call out the conflict and ask for direction before introducing a new visual convention.
+
 ## Local Skills
 
 Load a skill by reading its `SKILL.md` before using its workflow.
