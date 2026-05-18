@@ -15,3 +15,7 @@ export interface ConfidenceResult {
   provider: string;
   raw?: Record<string, unknown>;
 }
+
+export interface ConfidenceScorer {
+  score(input: ConfidenceInput): Promise<ConfidenceResult>;
+}

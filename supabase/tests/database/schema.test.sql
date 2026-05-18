@@ -4,7 +4,7 @@ set search_path to public, extensions;
 
 create extension if not exists pgtap with schema extensions;
 
-select plan(14);
+select plan(16);
 
 select has_table('public', 'profiles', 'profiles table exists');
 select has_table('public', 'drop_off_points', 'drop_off_points table exists');
@@ -16,6 +16,8 @@ select has_table('public', 'coin_wallets', 'coin_wallets table exists');
 select has_table('public', 'coin_ledger', 'coin_ledger table exists');
 select has_table('public', 'scratch_card_campaigns', 'scratch_card_campaigns table exists');
 select has_table('public', 'device_tokens', 'device_tokens table exists');
+select has_column('public', 'disposal_submissions', 'capture_latitude', 'disposal_submissions capture latitude exists');
+select has_column('public', 'disposal_submissions', 'capture_longitude', 'disposal_submissions capture longitude exists');
 
 select is(
   (select string_agg(enumlabel::text, ',' order by enumsortorder) from pg_enum join pg_type on pg_type.oid = enumtypid where typname = 'disposal_status'),
