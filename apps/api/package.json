@@ -11,15 +11,18 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@eco-wallet/domain": "workspace:*",
     "cors": "^2.8.5",
     "express": "^5.1.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.4",
     "@types/cors": "^2.8.18",
     "@types/express": "^5.0.2",
     "@types/node": "^22.15.21",
     "eslint": "^9.27.0",
     "tsx": "^4.19.4",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.59.3"
   }
 }
