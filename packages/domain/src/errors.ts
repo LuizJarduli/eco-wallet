@@ -1,6 +1,10 @@
 import { z } from "zod";
 
 export const domainErrorCodes = [
+  "UNAUTHORIZED",
+  "FORBIDDEN",
+  "NOT_FOUND",
+  "INTERNAL_ERROR",
   "DISPOSAL_NOT_FOUND",
   "INVALID_TRANSITION",
   "BELOW_MIN_VOLUME"
