@@ -844,6 +844,14 @@ The radius scale is tightly disciplined — the brand never uses a corner soften
 7. Pill-shaped buttons (`{rounded.full}`) always; squared buttons signal "third-party widget" in this language.
 8. Documentation prose belongs in `{typography.body-md}` 16px with 1.50 line-height — anything denser breaks the reading experience.
 
+## Copy and Locale
+
+- Eco Wallet is a **Brazilian** product: all user-facing copy is **`pt-BR` only** (no English in shipped UI unless multilingual support is explicitly in scope).
+- Agent artifacts (PRDs, tasks, commits) stay in English; only strings end users see use Portuguese.
+- Prefer natural Brazilian phrasing over literal translation; keep mobile labels short.
+- Format money as `R$`, use Brazilian number/date conventions, and locale-aware formatting (`pt_BR`).
+- Full rules for agents: `.agents/rules/locale_pt_br_user_ui.mdc`.
+
 ## Known Gaps
 
 - Specific dark-mode token values for canvas, surface, ink, and hairline are not surfaced on these pages; the brand has not yet shipped a published dark-mode palette

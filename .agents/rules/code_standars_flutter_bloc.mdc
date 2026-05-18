@@ -6,6 +6,7 @@ alwaysApply: false
 
 # Flutter Code Standards
 
+- All user-visible strings MUST be **pt-BR**. See `.agents/rules/locale_pt_br_user_ui.mdc` for copy and formatting rules.
 - Follow Effective Dart, `flutter_lints`, KISS, DRY, and SOLID without adding abstractions before they are needed.
 - Prefer immutable models, `final` fields, `const` constructors, and small widgets with clear responsibilities.
 - Keep UI, state management, domain logic, and data access separated. Do not call APIs, databases, or repositories directly from widgets.

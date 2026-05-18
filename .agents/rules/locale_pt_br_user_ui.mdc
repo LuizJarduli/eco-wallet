@@ -1,0 +1,43 @@
+---
+description: Brazilian Portuguese (pt-BR) for all user-visible copy in the Eco Wallet app
+globs: apps/mobile/**/*.dart,**/*.{tsx,jsx}
+alwaysApply: false
+---
+
+# User-Facing Language (pt-BR)
+
+Eco Wallet is a Brazilian product. All copy that end users see MUST be **Brazilian Portuguese (`pt-BR`)** only. Do not ship English (or other locales) in the product UI unless the user explicitly requests multilingual support.
+
+## In scope (pt-BR required)
+
+- Screen titles, headings, body text, hints, placeholders, and tooltips
+- Buttons, links, tabs, chips, badges, and navigation labels
+- Empty, loading, and error states shown in the app
+- Dialogs, sheets, snackbars, toasts, and inline validation messages
+- Onboarding, permissions, and settings explanations
+- Push notification text and deep-link landing copy (when added)
+- User-visible API or GraphQL error messages and field validation text returned to clients
+
+## Out of scope (English is fine)
+
+- Agent instructions, PRDs, TechSpecs, tasks, ADRs, commits, PRs, and code review comments
+- Code identifiers: class names, variables, routes, keys, logs, and developer comments
+- Internal-only admin or ops tools not shipped to end users (unless specified otherwise)
+
+## Writing guidelines
+
+- Use natural Brazilian Portuguese, not literal translation from English. Prefer terms users expect (e.g. **Entrar**, **Cadastrar**, **Salvar**, **Tentar novamente**).
+- Use **você** (or neutral UI phrasing); avoid European Portuguese forms and overly formal **senhor(a)** unless the product tone requires it.
+- Format numbers, currency, and dates for Brazil: `R$`, comma as decimal separator when displaying amounts, and locale-aware date/time formatting (`pt_BR`).
+- Sentence case for short UI labels is acceptable; use consistent capitalization within a screen.
+- Keep strings short and scannable on mobile. Avoid English product jargon when a common Portuguese term exists.
+
+## Implementation
+
+- Prefer a single source of truth for copy (e.g. ARB/`intl` code generation in Flutter, or a shared messages module in web) instead of hard-coding duplicate strings.
+- When adding tests that assert UI text, assert the **pt-BR** string, not an English placeholder.
+- If existing UI copy is in English, replace it with pt-BR as part of the same change—do not add new English strings.
+
+## Review checklist
+
+Before marking UI work complete, confirm no user-visible English remains on touched screens and that formatting matches Brazilian conventions.
