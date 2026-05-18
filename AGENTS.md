@@ -29,31 +29,14 @@ Read the relevant rule before editing files in that stack:
 
 If multiple rules match, apply the most specific one for the files being edited. For example, use the Next.js rule for frontend `tsx` files and the Node.js REST API rule for backend API handlers or services.
 
-## Pull Request and Review Workflow
+## Pull Request, Branch, and Linear Workflow
 
-  For creating PRs, running review rounds, or fixing review feedback, use the dedicated PR/review skill under `.agents/skills/`.
-  Never commit, push, create a PR, or change Linear statuses unless the user explicitly asks. Before claiming completion, run the relevant verification and use `cy-final-verify` when fresh evidence is required.
-
-  Then the skill can contain the real automation:
-
-## PR and Compozy Review Workflow
-
-  Use when the user asks to create a PR, prepare work for review, run a Compozy review round, or fix review feedback.
-
-  1. Read `AGENTS.md`.
-  2. Run fresh verification through `cy-final-verify`.
-  3. Inspect `git status`, `git diff`, and recent `git log`.
-  4. Commit only if explicitly requested.
-  5. Push only if explicitly requested or required for PR creation.
-  6. Create the PR with `gh pr create` or GitHub MCP.
-  7. Include:
-     - Summary
-     - Test plan
-     - Linear issue links
-     - Compozy task path
-  8. Run `/cy-review-round` for local AI review or `compozy reviews fetch` for external provider feedback.
-  9. Use `cy-fix-reviews` to resolve review issue files.
-  10. Re-run verification before reporting completion.
+- Use `.agents/skills/linear-issue-to-pr/SKILL.md` when the user asks to work from a Linear issue, create a semantic branch, prepare a PR, or open a PR linked to Linear.
+- Explicit authorization is required before committing, pushing, opening a pull request, or changing Linear issue status. Requests like "work on LIN-123 and open a PR", "create a branch for this issue", or "prepare a PR" count as authorization for the named action.
+- Before changing code for a Linear-backed task, inspect the issue, related comments, current git status, current branch, and relevant repository context.
+- Use semantic branch names that include the issue key or task number and a short slug, such as `feature/LIN-123-carbon-wallet`, `fix/LIN-123-login-error`, or `chore/task-02-linear-pr-workflow-skill`.
+- Before claiming completion, run the relevant verification. Use `cy-final-verify` when fresh evidence is required.
+- For review rounds or fixing review feedback, use the dedicated Compozy review skills under `.agents/skills/`.
 
 ## Design System
 
@@ -64,6 +47,11 @@ If multiple rules match, apply the most specific one for the files being edited.
 ## Local Skills
 
 Load a skill by reading its `SKILL.md` before using its workflow.
+
+### GitHub and Linear
+
+- `.agents/skills/linear-issue-to-pr/SKILL.md`
+  - Use when the user asks to check Linear issues, create semantic branches, implement issue work, commit, push, prepare PRs, or open PRs linked to Linear.
 
 ### Supabase
 
