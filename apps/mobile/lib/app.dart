@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:eco_wallet/core/notifications/device_token_registrar.dart';
 import 'package:eco_wallet/core/routing/app_router.dart';
 import 'package:eco_wallet/core/theme/app_theme.dart';
 import 'package:eco_wallet/features/auth/domain/repositories/auth_repository.dart';
@@ -14,12 +17,14 @@ import 'package:eco_wallet/features/wallet/presentation/bloc/wallet_bloc.dart';
 class EcoWalletApp extends StatelessWidget {
   const EcoWalletApp({
     required this.authRepository,
+    required this.deviceTokenRegistrar,
     required this.disposalRepository,
     required this.walletRepository,
     super.key,
   });
 
   final AuthRepository authRepository;
+  final DeviceTokenRegistrar deviceTokenRegistrar;
   final DisposalRepository disposalRepository;
   final WalletRepository walletRepository;
 
@@ -28,6 +33,9 @@ class EcoWalletApp extends StatelessWidget {
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider<AuthRepository>.value(value: authRepository),
+        RepositoryProvider<DeviceTokenRegistrar>.value(
+          value: deviceTokenRegistrar,
+        ),
         RepositoryProvider<DisposalRepository>.value(
           value: disposalRepository,
         ),
@@ -56,25 +64,36 @@ class _AuthGate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthBloc, AuthState>(
-      builder: (context, state) {
-        if (state is AuthInitial || state is AuthLoading) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
-        }
+    return BlocListener<AuthBloc, AuthState>(
+      listenWhen: (previous, current) =>
+          current is AuthAuthenticated && previous is! AuthAuthenticated,
+      listener: (context, state) {
         if (state is AuthAuthenticated) {
-          return BlocProvider(
-            create:
-                (context) => WalletBloc(
-                  walletRepository: context.read<WalletRepository>(),
-                  disposalRepository: context.read<DisposalRepository>(),
-                )..add(WalletStarted(state.user.id)),
-            child: const HomePage(),
+          unawaited(
+            context.read<DeviceTokenRegistrar>().registerForUser(state.user.id),
           );
         }
-        return const AuthFlowPage();
       },
+      child: BlocBuilder<AuthBloc, AuthState>(
+        builder: (context, state) {
+          if (state is AuthInitial || state is AuthLoading) {
+            return const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            );
+          }
+          if (state is AuthAuthenticated) {
+            return BlocProvider(
+              create:
+                  (context) => WalletBloc(
+                    walletRepository: context.read<WalletRepository>(),
+                    disposalRepository: context.read<DisposalRepository>(),
+                  )..add(WalletStarted(state.user.id)),
+              child: const HomePage(),
+            );
+          }
+          return const AuthFlowPage();
+        },
+      ),
     );
   }
 }

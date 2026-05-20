@@ -2,6 +2,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'package:eco_wallet/app.dart';
+import 'package:eco_wallet/core/notifications/device_token_registrar.dart';
+import 'package:eco_wallet/core/notifications/device_token_repository.dart';
+import 'package:eco_wallet/core/notifications/noop_push_token_service.dart';
 import 'package:eco_wallet/features/auth/domain/entities/auth_user.dart';
 import 'package:eco_wallet/features/auth/domain/repositories/auth_repository.dart';
 import 'package:eco_wallet/features/disposal/domain/repositories/disposal_repository.dart';
@@ -14,10 +17,14 @@ class MockDisposalRepository extends Mock implements DisposalRepository {}
 
 class MockWalletRepository extends Mock implements WalletRepository {}
 
+class MockDeviceTokenRepository extends Mock implements DeviceTokenRepository {}
+
 void main() {
   late MockAuthRepository authRepository;
   late MockDisposalRepository disposalRepository;
   late MockWalletRepository walletRepository;
+  late DeviceTokenRegistrar deviceTokenRegistrar;
+  late MockDeviceTokenRepository deviceTokenRepository;
 
   const testUser = AuthUser(id: 'user-1', email: 'student@unifacens.edu.br');
 
@@ -25,6 +32,18 @@ void main() {
     authRepository = MockAuthRepository();
     disposalRepository = MockDisposalRepository();
     walletRepository = MockWalletRepository();
+    deviceTokenRepository = MockDeviceTokenRepository();
+    when(
+      () => deviceTokenRepository.upsertToken(
+        userId: any(named: 'userId'),
+        token: any(named: 'token'),
+        platform: any(named: 'platform'),
+      ),
+    ).thenAnswer((_) async {});
+    deviceTokenRegistrar = DeviceTokenRegistrar(
+      deviceTokenRepository: deviceTokenRepository,
+      pushTokenService: NoOpPushTokenService(),
+    );
 
     when(() => authRepository.signOut()).thenAnswer((_) async {});
     when(() => disposalRepository.fetchMySubmissions(userId: testUser.id))
@@ -64,6 +83,7 @@ void main() {
     await tester.pumpWidget(
       EcoWalletApp(
         authRepository: authRepository,
+        deviceTokenRegistrar: deviceTokenRegistrar,
         disposalRepository: disposalRepository,
         walletRepository: walletRepository,
       ),
@@ -82,6 +102,7 @@ void main() {
     await tester.pumpWidget(
       EcoWalletApp(
         authRepository: authRepository,
+        deviceTokenRegistrar: deviceTokenRegistrar,
         disposalRepository: disposalRepository,
         walletRepository: walletRepository,
       ),

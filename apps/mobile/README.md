@@ -23,6 +23,31 @@ Use the URL and anon key from `pnpm dlx supabase status` after starting the loca
 
 Without both defines, the app shows a configuration screen instead of the auth flow.
 
+## Push notifications and device tokens
+
+After sign-in, the app can register the member device token in Supabase `device_tokens` (RLS: members manage their own rows). Express reads those tokens when an admin rejects a disposal and sends FCM/APNs push with a pt-BR reason and deep link `ecowallet://disposal/submit`.
+
+Enable Firebase Messaging on device builds:
+
+```bash
+flutter run \
+  --dart-define=SUPABASE_URL=... \
+  --dart-define=SUPABASE_ANON_KEY=... \
+  --dart-define=API_BASE_URL=http://127.0.0.1:3000 \
+  --dart-define=ENABLE_PUSH_NOTIFICATIONS=true
+```
+
+Add the platform Firebase config files (`google-services.json`, `GoogleService-Info.plist`) before testing on a physical device or emulator. Without `ENABLE_PUSH_NOTIFICATIONS`, token registration is skipped.
+
+**Upsert pattern (Supabase direct):**
+
+```dart
+await Supabase.instance.client.from('device_tokens').upsert(
+  {'user_id': userId, 'platform': 'android', 'token': fcmToken},
+  onConflict: 'user_id,token',
+);
+```
+
 ## Development
 
 ```bash

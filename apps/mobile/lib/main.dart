@@ -1,8 +1,14 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:eco_wallet/app.dart';
 import 'package:eco_wallet/core/constants/env.dart';
+import 'package:eco_wallet/core/notifications/device_token_registrar.dart';
+import 'package:eco_wallet/core/notifications/device_token_repository.dart';
+import 'package:eco_wallet/core/notifications/firebase_push_token_service.dart';
+import 'package:eco_wallet/core/notifications/noop_push_token_service.dart';
+import 'package:eco_wallet/core/notifications/push_token_service.dart';
 import 'package:eco_wallet/core/theme/app_colors.dart';
 import 'package:eco_wallet/features/auth/data/repositories/supabase_auth_repository.dart';
 import 'package:eco_wallet/features/disposal/data/repositories/supabase_disposal_repository.dart';
@@ -21,13 +27,28 @@ Future<void> main() async {
     anonKey: Env.supabaseAnonKey,
   );
 
+  final pushTokenService = await _createPushTokenService();
+
   runApp(
     EcoWalletApp(
       authRepository: SupabaseAuthRepository(),
+      deviceTokenRegistrar: DeviceTokenRegistrar(
+        deviceTokenRepository: DeviceTokenRepository(),
+        pushTokenService: pushTokenService,
+      ),
       disposalRepository: SupabaseDisposalRepository(),
       walletRepository: SupabaseWalletRepository(),
     ),
   );
+}
+
+Future<PushTokenService> _createPushTokenService() async {
+  if (!Env.enablePushNotifications) {
+    return NoOpPushTokenService();
+  }
+
+  await Firebase.initializeApp();
+  return FirebasePushTokenService();
 }
 
 class _MissingConfigApp extends StatelessWidget {

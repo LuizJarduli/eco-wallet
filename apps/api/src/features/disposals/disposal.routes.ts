@@ -1,9 +1,12 @@
 import { Router, type RequestHandler } from "express";
 
+import { logger } from "../../core/logger/logger.js";
 import { authenticateJwt } from "../../core/middleware/auth.js";
 import { requireAdmin } from "../../core/middleware/require-admin.js";
 import type { SupabaseJwtVerifier } from "../../core/supabase/auth-user.service.js";
 import type { ProfileRoleLookup } from "../../core/supabase/profile-role.service.js";
+import { createNotificationService } from "../notifications/notification.service.js";
+import { createPushProviderFromEnv } from "../notifications/push-provider.factory.js";
 import { createDisposalController } from "./disposal.controller.js";
 import { SupabaseDisposalRepository } from "./disposal.repository.js";
 import {
@@ -30,7 +33,11 @@ export const createDisposalRoutes = ({
 
   const getService = (): DisposalAdminService => {
     resolvedService ??= createDisposalAdminService(
-      disposalRepository ?? new SupabaseDisposalRepository()
+      disposalRepository ?? new SupabaseDisposalRepository(),
+      logger,
+      createNotificationService({
+        pushProvider: createPushProviderFromEnv()
+      })
     );
 
     return resolvedService;

@@ -8,6 +8,8 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { AppError } from "../core/errors/app-error.js";
 import { createApp } from "../core/http/app.js";
 import type { Logger } from "../core/logger/logger.js";
+import { createNotificationService } from "../features/notifications/notification.service.js";
+import type { PushMessage, PushProvider } from "../features/notifications/push-provider.js";
 import {
   createDisposalAdminService,
   type AdminDisposalListFilters,
@@ -268,6 +270,31 @@ describe("DisposalAdminService", () => {
     });
   });
 
+  it("reject without device tokens still completes", async () => {
+    const submission = createSubmission();
+    const repository = new InMemoryDisposalRepository([submission]);
+    const provider: PushProvider = {
+      send: async () => {
+        throw new Error("should not be called");
+      }
+    };
+    const service = createDisposalAdminService(
+      repository,
+      silentLogger,
+      createNotificationService({
+        deviceTokenRepository: {
+          listByUserId: async () => []
+        },
+        pushProvider: provider
+      })
+    );
+
+    await expect(
+      service.reject("submission-1", "admin-1", "not_oil")
+    ).resolves.toBeUndefined();
+    expect(submission.status).toBe("rejected");
+  });
+
   it("reject after approval returns INVALID_TRANSITION", async () => {
     const repository = new InMemoryDisposalRepository([
       createSubmission({ status: "awaiting_audit" })
@@ -335,6 +362,7 @@ describe("admin disposal API", () => {
 
   const createTestApp = () =>
     createApp({
+      disposalAdminService: createDisposalAdminService(repository, silentLogger),
       disposalRepository: repository,
       jwtVerifier: createJwtVerifier("admin-1"),
       profileRoleLookup: createRoleLookup("admin")
@@ -395,6 +423,56 @@ describe("admin disposal API", () => {
     await expect(repository.findSubmission("submitted-1")).resolves.toMatchObject({
       rejectionReason: "not_oil",
       status: "rejected"
+    });
+  });
+
+  it("POST reject with mocked provider records one outbound call per device", async () => {
+    const outbound: PushMessage[] = [];
+    const notificationService = createNotificationService({
+      deviceTokenRepository: {
+        listByUserId: async () => [
+          {
+            id: "token-1",
+            platform: "android",
+            token: "device-token",
+            userId: "member-1"
+          }
+        ]
+      },
+      log: silentLogger,
+      pushProvider: {
+        send: async (message) => {
+          outbound.push(message);
+        }
+      }
+    });
+    const service = createDisposalAdminService(
+      repository,
+      silentLogger,
+      notificationService
+    );
+
+    await request(
+      createApp({
+        disposalAdminService: service,
+        disposalRepository: repository,
+        jwtVerifier: createJwtVerifier("admin-1"),
+        profileRoleLookup: createRoleLookup("admin")
+      })
+    )
+      .post("/v1/admin/disposals/submitted-1/reject")
+      .set("Authorization", "Bearer valid-token")
+      .send({ reasonCode: "unclear_photo" })
+      .expect(204);
+
+    expect(outbound).toHaveLength(1);
+    expect(outbound[0]).toMatchObject({
+      data: expect.objectContaining({
+        deepLink: "ecowallet://disposal/submit",
+        reasonCode: "unclear_photo",
+        submissionId: "submitted-1"
+      }),
+      token: "device-token"
     });
   });
 
