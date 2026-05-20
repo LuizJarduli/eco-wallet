@@ -12,6 +12,7 @@ import 'package:eco_wallet/core/notifications/push_token_service.dart';
 import 'package:eco_wallet/core/theme/app_colors.dart';
 import 'package:eco_wallet/features/auth/data/repositories/supabase_auth_repository.dart';
 import 'package:eco_wallet/features/disposal/data/repositories/supabase_disposal_repository.dart';
+import 'package:eco_wallet/features/rewards/data/repositories/supabase_rewards_repository.dart';
 import 'package:eco_wallet/features/wallet/data/repositories/supabase_wallet_repository.dart';
 
 Future<void> main() async {
@@ -37,6 +38,7 @@ Future<void> main() async {
         pushTokenService: pushTokenService,
       ),
       disposalRepository: SupabaseDisposalRepository(),
+      rewardsRepository: SupabaseRewardsRepository(),
       walletRepository: SupabaseWalletRepository(),
     ),
   );

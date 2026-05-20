@@ -2,23 +2,52 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 
+import 'package:eco_wallet/features/auth/domain/entities/auth_user.dart';
+import 'package:eco_wallet/features/auth/domain/repositories/auth_repository.dart';
+import 'package:eco_wallet/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:eco_wallet/features/disposal/domain/repositories/disposal_repository.dart';
 import 'package:eco_wallet/features/home/presentation/pages/home_page.dart';
 import 'package:eco_wallet/features/wallet/domain/entities/coin_wallet.dart';
+import 'package:eco_wallet/features/rewards/domain/entities/scratch_card_campaign.dart';
+import 'package:eco_wallet/features/rewards/domain/repositories/rewards_repository.dart';
+import 'package:eco_wallet/features/rewards/presentation/bloc/rewards_bloc.dart';
 import 'package:eco_wallet/features/wallet/domain/repositories/wallet_repository.dart';
 import 'package:eco_wallet/features/wallet/presentation/bloc/wallet_bloc.dart';
 
 import '../../disposal/__mocks__/mock_disposal_repository.dart';
+import '../../rewards/__mocks__/mock_rewards_repository.dart';
 import '../../wallet/__mocks__/mock_wallet_repository.dart';
 
+class MockAuthRepository extends Mock implements AuthRepository {}
+
+class MockGoTrueClient extends Mock implements sb.GoTrueClient {}
+
 void main() {
+  late MockAuthRepository authRepository;
   late MockWalletRepository walletRepository;
   late MockDisposalRepository disposalRepository;
+  late MockRewardsRepository rewardsRepository;
+  late MockGoTrueClient authClient;
+
+  const testUser = AuthUser(id: 'user-1', email: 'student@unifacens.edu.br');
 
   setUp(() {
+    authRepository = MockAuthRepository();
     walletRepository = MockWalletRepository();
     disposalRepository = MockDisposalRepository();
+    rewardsRepository = MockRewardsRepository();
+    authClient = MockGoTrueClient();
+    when(() => authRepository.currentUser).thenReturn(testUser);
+    when(() => rewardsRepository.fetchActiveCampaign()).thenAnswer(
+      (_) async => const ScratchCardCampaign(
+        id: 'campaign-1',
+        name: 'Campanha teste',
+        costCoins: 10,
+        active: true,
+      ),
+    );
 
     when(() => walletRepository.fetchWallet(userId: 'user-1')).thenAnswer(
       (_) async => CoinWallet(
@@ -54,13 +83,34 @@ void main() {
         value: walletRepository,
         child: RepositoryProvider<DisposalRepository>.value(
           value: disposalRepository,
-          child: BlocProvider(
-            create:
-                (_) => WalletBloc(
-                  walletRepository: walletRepository,
-                  disposalRepository: disposalRepository,
-                )..add(const WalletStarted('user-1')),
-            child: const HomePage(),
+          child: RepositoryProvider<RewardsRepository>.value(
+            value: rewardsRepository,
+            child: MultiBlocProvider(
+              providers: [
+                BlocProvider<AuthBloc>(
+                  create: (_) {
+                    final bloc = AuthBloc(authRepository: authRepository);
+                    bloc.emit(const AuthAuthenticated(testUser));
+                    return bloc;
+                  },
+                ),
+                BlocProvider(
+                  create:
+                      (_) => WalletBloc(
+                        walletRepository: walletRepository,
+                        disposalRepository: disposalRepository,
+                      )..add(const WalletStarted('user-1')),
+                ),
+                BlocProvider(
+                  create:
+                      (_) => RewardsBloc(
+                        rewardsRepository: rewardsRepository,
+                        auth: authClient,
+                      ),
+                ),
+              ],
+              child: const HomePage(),
+            ),
           ),
         ),
       ),

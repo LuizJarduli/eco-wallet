@@ -12,7 +12,7 @@ import 'package:eco_wallet/features/disposal/presentation/bloc/disposal_detail_b
 import 'package:eco_wallet/features/disposal/presentation/pages/disposal_detail_page.dart';
 import 'package:eco_wallet/features/disposal/presentation/pages/disposal_submission_page.dart';
 import 'package:eco_wallet/features/wallet/presentation/bloc/wallet_bloc.dart';
-import 'package:eco_wallet/features/wallet/presentation/pages/wallet_page.dart';
+import 'package:eco_wallet/features/rewards/presentation/pages/rewards_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -59,13 +59,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   Widget _buildBody() {
+    final authState = context.read<AuthBloc>().state;
+    final userId = authState is AuthAuthenticated ? authState.user.id : '';
+
     return switch (_selectedIndex) {
       0 => _HomeTab(
         onNewDisposal: _openDisposalSubmission,
         onOpenRewards: () => setState(() => _selectedIndex = 2),
       ),
       1 => const _DisposalsTab(),
-      2 => const WalletPage(),
+      2 => RewardsPage(userId: userId),
       _ => const _ProfileTab(),
     };
   }

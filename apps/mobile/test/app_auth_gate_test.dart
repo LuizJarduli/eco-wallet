@@ -9,11 +9,15 @@ import 'package:eco_wallet/features/auth/domain/entities/auth_user.dart';
 import 'package:eco_wallet/features/auth/domain/repositories/auth_repository.dart';
 import 'package:eco_wallet/features/disposal/domain/repositories/disposal_repository.dart';
 import 'package:eco_wallet/features/wallet/domain/entities/coin_wallet.dart';
+import 'package:eco_wallet/features/rewards/domain/entities/scratch_card_campaign.dart';
+import 'package:eco_wallet/features/rewards/domain/repositories/rewards_repository.dart';
 import 'package:eco_wallet/features/wallet/domain/repositories/wallet_repository.dart';
 
 class MockAuthRepository extends Mock implements AuthRepository {}
 
 class MockDisposalRepository extends Mock implements DisposalRepository {}
+
+class MockRewardsRepository extends Mock implements RewardsRepository {}
 
 class MockWalletRepository extends Mock implements WalletRepository {}
 
@@ -22,6 +26,7 @@ class MockDeviceTokenRepository extends Mock implements DeviceTokenRepository {}
 void main() {
   late MockAuthRepository authRepository;
   late MockDisposalRepository disposalRepository;
+  late MockRewardsRepository rewardsRepository;
   late MockWalletRepository walletRepository;
   late DeviceTokenRegistrar deviceTokenRegistrar;
   late MockDeviceTokenRepository deviceTokenRepository;
@@ -31,7 +36,16 @@ void main() {
   setUp(() {
     authRepository = MockAuthRepository();
     disposalRepository = MockDisposalRepository();
+    rewardsRepository = MockRewardsRepository();
     walletRepository = MockWalletRepository();
+    when(() => rewardsRepository.fetchActiveCampaign()).thenAnswer(
+      (_) async => const ScratchCardCampaign(
+        id: 'campaign-1',
+        name: 'Campanha teste',
+        costCoins: 10,
+        active: true,
+      ),
+    );
     deviceTokenRepository = MockDeviceTokenRepository();
     when(
       () => deviceTokenRepository.upsertToken(
@@ -85,6 +99,7 @@ void main() {
         authRepository: authRepository,
         deviceTokenRegistrar: deviceTokenRegistrar,
         disposalRepository: disposalRepository,
+        rewardsRepository: rewardsRepository,
         walletRepository: walletRepository,
       ),
     );
@@ -104,6 +119,7 @@ void main() {
         authRepository: authRepository,
         deviceTokenRegistrar: deviceTokenRegistrar,
         disposalRepository: disposalRepository,
+        rewardsRepository: rewardsRepository,
         walletRepository: walletRepository,
       ),
     );
