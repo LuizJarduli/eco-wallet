@@ -8,7 +8,9 @@ export const domainErrorCodes = [
   "INTERNAL_ERROR",
   "DISPOSAL_NOT_FOUND",
   "INVALID_TRANSITION",
-  "BELOW_MIN_VOLUME"
+  "BELOW_MIN_VOLUME",
+  "INSUFFICIENT_BALANCE",
+  "CAMPAIGN_INACTIVE"
 ] as const;
 
 export const domainErrorCodeSchema = z.enum(domainErrorCodes);
