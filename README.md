@@ -66,3 +66,10 @@ eco-wallet/
 ├── pnpm-workspace.yaml
 └── turbo.json
 ```
+
+## Authors
+
+- Luiz Miguel Jarduli Jarduli
+- Giovanna Antunes de Campos
+- Leonardo Hipolito Trevisi
+- Gabriel Ribeiro Lattri
