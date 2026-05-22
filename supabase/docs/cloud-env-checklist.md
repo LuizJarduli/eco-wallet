@@ -1,12 +1,13 @@
 # Cloud environment variable checklist
 
-Copy values from **Supabase Dashboard → Project Settings → API** (`Project URL`, `anon` `public`, `service_role` **secret**).
+Copy values from **Supabase Dashboard → Project Settings → API** (`Project URL`, publishable key, `service_role` **secret**).
 
 ## `apps/api` (Express)
 
 | Variable | Required | Notes |
 |----------|----------|-------|
 | `SUPABASE_URL` | Yes | `https://<project-ref>.supabase.co` |
+| `SUPABASE_PUBLISHABLE_KEY` | Yes | JWT verification and RLS-scoped access |
 | `SUPABASE_SERVICE_ROLE_KEY` | Yes | Server only; bypasses RLS for admin mutations |
 | `PORT` | No | Default `3001` |
 | `VISION_API_URL` | No | Confidence scoring |
@@ -21,7 +22,7 @@ Example: `apps/api/.env.example`
 | Variable | Required | Notes |
 |----------|----------|-------|
 | `NEXT_PUBLIC_SUPABASE_URL` | Yes | Same as `SUPABASE_URL` |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Browser-safe |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Yes | Browser-safe |
 | `NEXT_PUBLIC_API_BASE_URL` | Yes | Deployed Express URL (no trailing slash) |
 | `SUPABASE_SERVICE_ROLE_KEY` | Yes (server) | `/api/admin/photo` signed URLs only |
 

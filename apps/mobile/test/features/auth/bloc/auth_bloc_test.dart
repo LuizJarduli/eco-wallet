@@ -42,11 +42,7 @@ void main() {
           ),
         ).thenThrow(const AuthException('E-mail ou senha inválidos.'));
       },
-      expect:
-          () => [
-            const AuthLoading(),
-            const AuthFailure('E-mail ou senha inválidos.'),
-          ],
+      expect: () => [const AuthFailure('E-mail ou senha inválidos.')],
     );
 
     blocTest<AuthBloc, AuthState>(
@@ -67,11 +63,7 @@ void main() {
           ),
         ).thenAnswer((_) async => testUser);
       },
-      expect:
-          () => [
-            const AuthLoading(),
-            const AuthAuthenticated(testUser),
-          ],
+      expect: () => [const AuthAuthenticated(testUser)],
       verify: (_) {
         verify(
           () => authRepository.signIn(
@@ -89,7 +81,7 @@ void main() {
       setUp: () {
         when(() => authRepository.currentUser).thenReturn(testUser);
       },
-      expect: () => [const AuthLoading(), const AuthAuthenticated(testUser)],
+      expect: () => [const AuthBootstrapping(), const AuthAuthenticated(testUser)],
     );
 
     blocTest<AuthBloc, AuthState>(
@@ -99,7 +91,7 @@ void main() {
       setUp: () {
         when(() => authRepository.restoreSession()).thenAnswer((_) async => testUser);
       },
-      expect: () => [const AuthLoading(), const AuthAuthenticated(testUser)],
+      expect: () => [const AuthBootstrapping(), const AuthAuthenticated(testUser)],
     );
 
     blocTest<AuthBloc, AuthState>(
@@ -120,18 +112,14 @@ void main() {
           ),
         ).thenThrow(const AuthException('Este e-mail já está cadastrado.'));
       },
-      expect:
-          () => [
-            const AuthLoading(),
-            const AuthFailure('Este e-mail já está cadastrado.'),
-          ],
+      expect: () => [const AuthFailure('Este e-mail já está cadastrado.')],
     );
 
     blocTest<AuthBloc, AuthState>(
       'emits unauthenticated when session check finds no user',
       build: buildBloc,
       act: (bloc) => bloc.add(const AuthCheckRequested()),
-      expect: () => [const AuthLoading(), const AuthUnauthenticated()],
+      expect: () => [const AuthBootstrapping(), const AuthUnauthenticated()],
     );
 
     blocTest<AuthBloc, AuthState>(
@@ -152,11 +140,7 @@ void main() {
           ),
         ).thenAnswer((_) async => testUser);
       },
-      expect:
-          () => [
-            const AuthLoading(),
-            const AuthAuthenticated(testUser),
-          ],
+      expect: () => [const AuthAuthenticated(testUser)],
     );
 
     blocTest<AuthBloc, AuthState>(

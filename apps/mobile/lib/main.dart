@@ -25,7 +25,7 @@ Future<void> main() async {
 
   await Supabase.initialize(
     url: Env.supabaseUrl,
-    anonKey: Env.supabaseAnonKey,
+    anonKey: Env.supabaseClientKey,
   );
 
   final pushTokenService = await _createPushTokenService();
@@ -76,7 +76,7 @@ class _MissingConfigApp extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 const Text(
-                  'Defina SUPABASE_URL e SUPABASE_ANON_KEY com --dart-define '
+                  'Defina SUPABASE_URL e SUPABASE_PUBLISHABLE_KEY com --dart-define '
                   'antes de executar o app. Consulte apps/mobile/README.md.',
                   style: TextStyle(color: AppColors.stone),
                 ),

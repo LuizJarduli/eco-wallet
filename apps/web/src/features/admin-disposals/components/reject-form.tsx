@@ -4,6 +4,12 @@ import { rejectionReasonCodes, type RejectionReasonCode } from "@eco-wallet/doma
 import { useState } from "react";
 
 import { ApiErrorBanner } from "@/core/ui/api-error-banner";
+import {
+  buttonDangerClassName,
+  formFieldClassName,
+  formLabelClassName,
+  formTextareaClassName
+} from "@/core/ui/form-controls";
 import { rejectionReasonLabels } from "@/features/admin-disposals/constants";
 
 interface RejectFormProps {
@@ -39,10 +45,10 @@ export const RejectForm = ({
       }}
     >
       <label className="flex flex-col gap-1 text-sm">
-        <span className="font-medium text-zinc-700">Motivo da rejeição</span>
+        <span className={formLabelClassName}>Motivo da rejeição</span>
         <select
           aria-label="Motivo da rejeição"
-          className="rounded-md border border-zinc-300 bg-white px-3 py-2"
+          className={formFieldClassName}
           value={reasonCode}
           onChange={(event) =>
             setReasonCode(event.target.value as RejectionReasonCode | "")
@@ -58,9 +64,9 @@ export const RejectForm = ({
       </label>
 
       <label className="flex flex-col gap-1 text-sm">
-        <span className="font-medium text-zinc-700">Observação (opcional)</span>
+        <span className={formLabelClassName}>Observação (opcional)</span>
         <textarea
-          className="min-h-20 rounded-md border border-zinc-300 px-3 py-2"
+          className={formTextareaClassName}
           value={note}
           onChange={(event) => setNote(event.target.value)}
           maxLength={500}
@@ -72,7 +78,7 @@ export const RejectForm = ({
       <button
         type="submit"
         disabled={!reasonCode || isSubmitting}
-        className="rounded-md bg-red-700 px-4 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:bg-red-300"
+        className={buttonDangerClassName}
       >
         {isSubmitting ? "Rejeitando..." : "Rejeitar descarte"}
       </button>

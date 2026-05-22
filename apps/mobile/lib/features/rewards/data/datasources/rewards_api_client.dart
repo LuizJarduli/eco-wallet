@@ -67,6 +67,16 @@ class RewardsApiClient {
       if (code == 'INSUFFICIENT_BALANCE') {
         return 'Saldo insuficiente para raspar esta carta.';
       }
+      if (code == 'CAMPAIGN_INACTIVE') {
+        return 'Esta campanha não está disponível no momento.';
+      }
+      if (code == 'VALIDATION_ERROR') {
+        return 'Não foi possível concluir a raspadinha. Tente novamente.';
+      }
+      if (code == 'INTERNAL_ERROR' ||
+          (message != null && message.contains('persistence operation failed'))) {
+        return 'Não foi possível raspar a carta. Tente novamente em instantes.';
+      }
       if (message != null && message.isNotEmpty) {
         return message;
       }

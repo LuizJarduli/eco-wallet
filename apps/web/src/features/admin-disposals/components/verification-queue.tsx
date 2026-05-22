@@ -12,6 +12,7 @@ import {
   type AdminDisposalItem,
   type ReviewPriority
 } from "@/core/lib/admin-api";
+import { buttonSecondaryClassName } from "@/core/ui/form-controls";
 import { ApproveForm } from "@/features/admin-disposals/components/approve-form";
 import {
   QueueFilters,
@@ -115,7 +116,7 @@ export const VerificationQueue = ({ accessToken }: VerificationQueueProps) => {
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
-              className="rounded-md border border-zinc-300 px-3 py-1 text-sm"
+              className={buttonSecondaryClassName}
               onClick={() => {
                 setActiveId((current) =>
                   current === submission.id ? null : submission.id

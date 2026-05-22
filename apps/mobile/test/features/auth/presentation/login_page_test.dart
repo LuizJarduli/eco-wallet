@@ -34,10 +34,17 @@ void main() {
     );
   }
 
-  testWidgets('login button is disabled while loading', (tester) async {
-    when(() => authBloc.state).thenReturn(const AuthLoading());
-
+  testWidgets('login button shows loading indicator while submitting', (
+    tester,
+  ) async {
     await tester.pumpWidget(buildSubject());
+    await tester.enterText(
+      find.byType(TextFormField).at(0),
+      'maria.demo@ecowallet.test',
+    );
+    await tester.enterText(find.byType(TextFormField).at(1), 'demo123456');
+    await tester.tap(find.text('Entrar'));
+    await tester.pump();
 
     final button = tester.widget<ElevatedButton>(find.byType(ElevatedButton));
 

@@ -13,15 +13,20 @@ The app reads Supabase settings at compile time via `--dart-define`:
 
 ```bash
 cd apps/mobile
-flutter run \
-  --dart-define=SUPABASE_URL=http://127.0.0.1:54321 \
-  --dart-define=SUPABASE_ANON_KEY=your-local-anon-key \
-  --dart-define=API_BASE_URL=http://127.0.0.1:3000
+flutter run --dart-define-from-file=.env
 ```
 
-Use the URL and anon key from `pnpm dlx supabase status` after starting the local stack. See [`supabase/README.md`](../../supabase/README.md) for the full bootstrap flow.
+Example `apps/mobile/.env` (cloud):
 
-Without both defines, the app shows a configuration screen instead of the auth flow.
+```env
+SUPABASE_URL=https://YOUR_PROJECT_REF.supabase.co
+SUPABASE_PUBLISHABLE_KEY=your-publishable-key
+API_BASE_URL=http://127.0.0.1:3001
+```
+
+Use the **publishable** key from Supabase Dashboard → Settings → API (not a legacy/invalid anon key). For local Supabase, copy values from `pnpm dlx supabase status`. See [`supabase/README.md`](../../supabase/README.md).
+
+Without URL + key, the app shows a configuration screen instead of the auth flow.
 
 ## Push notifications and device tokens
 
@@ -32,7 +37,7 @@ Enable Firebase Messaging on device builds:
 ```bash
 flutter run \
   --dart-define=SUPABASE_URL=... \
-  --dart-define=SUPABASE_ANON_KEY=... \
+  --dart-define=SUPABASE_PUBLISHABLE_KEY=... \
   --dart-define=API_BASE_URL=http://127.0.0.1:3000 \
   --dart-define=ENABLE_PUSH_NOTIFICATIONS=true
 ```

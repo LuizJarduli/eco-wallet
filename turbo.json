@@ -13,7 +13,15 @@
     },
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "env": [
+        "NEXT_PUBLIC_*",
+        "SUPABASE_*",
+        "PORT",
+        "VISION_*",
+        "FCM_*",
+        "APNS_*"
+      ]
     },
     "lint": {
       "dependsOn": [

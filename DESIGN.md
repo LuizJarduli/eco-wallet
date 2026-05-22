@@ -844,6 +844,41 @@ The radius scale is tightly disciplined — the brand never uses a corner soften
 7. Pill-shaped buttons (`{rounded.full}`) always; squared buttons signal "third-party widget" in this language.
 8. Documentation prose belongs in `{typography.body-md}` 16px with 1.50 line-height — anything denser breaks the reading experience.
 
+## Eco Wallet Admin UI — Form Contrast (mandatory)
+
+The Mintlify-derived `{colors.hairline}` / `{colors.stone}` tokens are **too light** for interactive controls on white admin surfaces. Agents and UI work **must** follow these rules for `apps/web` backoffice (and any future admin UI):
+
+### Minimum contrast rules
+
+| Element | Never use | Always use |
+|--------|-----------|------------|
+| Field border (1px hairline feel) | `border-zinc-200`, `border-zinc-300`, `{colors.hairline}` alone | **`border-2 border-zinc-600`** minimum on `{colors.canvas}` |
+| Field / select text | `text-zinc-400`, `text-zinc-500` as primary value color | **`text-zinc-900`** (`{colors.ink}`) with `font-medium` |
+| Labels | `text-zinc-500`, `font-medium` only | **`text-zinc-900`**, **`font-semibold`** |
+| Secondary actions (“Revisar”, filters) | Light gray border + default text | **`buttonSecondaryClassName`** in `apps/web/src/core/ui/form-controls.ts` — `border-2 border-zinc-700`, `text-zinc-900`, `font-semibold` |
+| Primary submit | Low-contrast gray pills | **`buttonPrimaryClassName`** (`zinc-900`) or semantic success/danger classes below |
+| Helper / empty state body | `text-zinc-500` for sentences users must read | **`text-zinc-600`** minimum; prefer **`text-zinc-700`** for secondary copy |
+| Placeholder text | Same as body ink | **`placeholder:text-zinc-500`** only (not for labels) |
+
+### Shared implementation
+
+Do **not** hand-roll one-off `border-zinc-300` classes on admin inputs or outline buttons. Import from:
+
+`apps/web/src/core/ui/form-controls.ts`
+
+- `formLabelClassName`, `formFieldClassName`, `formTextareaClassName`
+- `buttonSecondaryClassName`, `buttonPrimaryClassName`, `buttonSuccessClassName`, `buttonDangerClassName`
+
+### Focus and disabled
+
+- Focus: `focus:border-emerald-800` + `focus:ring-2 focus:ring-emerald-800/30` on fields (brand accent, WCAG-visible).
+- Disabled fields: `disabled:border-zinc-400 disabled:bg-zinc-100 disabled:text-zinc-500`.
+- Disabled solid buttons: desaturate background (`disabled:bg-*-200`) but keep **readable** label contrast; never `opacity-60` alone on outline buttons.
+
+### Lint / review checklist
+
+Before merging admin UI: no `border-zinc-200` or `border-zinc-300` on `<input>`, `<select>`, `<textarea>`, or secondary `<button>`; snapshot or manual check at `/admin/verificacao` and `/admin/login`.
+
 ## Copy and Locale
 
 - Eco Wallet is a **Brazilian** product: all user-facing copy is **`pt-BR` only** (no English in shipped UI unless multilingual support is explicitly in scope).

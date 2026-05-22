@@ -27,6 +27,9 @@ export const rejectionReasonLabels: Record<RejectionReasonCode, string> = {
   other: "Outro"
 };
 
+/** Static fallback when Supabase storage has no file for the submission path. */
+export const disposalPhotoPlaceholderPath = "/placeholders/disposal-oil-bottle.jpg";
+
 export const domainErrorMessages: Record<string, string> = {
   BELOW_MIN_VOLUME:
     "O volume auditado está abaixo do mínimo exigido pelas regras ativas.",

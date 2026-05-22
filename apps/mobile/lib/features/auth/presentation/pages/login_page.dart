@@ -17,6 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  var _isSubmitting = false;
 
   @override
   void dispose() {
@@ -29,6 +30,7 @@ class _LoginPageState extends State<LoginPage> {
     if (!_formKey.currentState!.validate()) {
       return;
     }
+    setState(() => _isSubmitting = true);
     context.read<AuthBloc>().add(
       AuthSignInRequested(
         email: _emailController.text,
@@ -47,13 +49,17 @@ class _LoginPageState extends State<LoginPage> {
                   current is AuthFailure || current is AuthAuthenticated,
           listener: (context, state) {
             if (state is AuthFailure) {
+              setState(() => _isSubmitting = false);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.message)),
               );
             }
+            if (state is AuthAuthenticated) {
+              setState(() => _isSubmitting = false);
+            }
           },
           builder: (context, state) {
-            final isLoading = state is AuthLoading;
+            final isLoading = _isSubmitting;
 
             return SingleChildScrollView(
               padding: const EdgeInsets.all(24),

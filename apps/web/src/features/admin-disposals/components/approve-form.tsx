@@ -3,6 +3,11 @@
 import { useState } from "react";
 
 import { ApiErrorBanner } from "@/core/ui/api-error-banner";
+import {
+  buttonSuccessClassName,
+  formFieldClassName,
+  formLabelClassName
+} from "@/core/ui/form-controls";
 
 interface ApproveFormProps {
   onSubmit: (estimatedLiters: number) => Promise<void>;
@@ -34,12 +39,12 @@ export const ApproveForm = ({
       }}
     >
       <label className="flex flex-col gap-1 text-sm">
-        <span className="font-medium text-zinc-700">Litros estimados</span>
+        <span className={formLabelClassName}>Litros estimados</span>
         <input
           type="number"
           min={0.1}
           step={0.1}
-          className="rounded-md border border-zinc-300 px-3 py-2"
+          className={formFieldClassName}
           value={estimatedLiters}
           onChange={(event) => setEstimatedLiters(event.target.value)}
         />
@@ -50,7 +55,7 @@ export const ApproveForm = ({
       <button
         type="submit"
         disabled={isSubmitting}
-        className="rounded-md bg-emerald-700 px-4 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:bg-emerald-300"
+        className={buttonSuccessClassName}
       >
         {isSubmitting ? "Aprovando..." : "Aprovar descarte"}
       </button>

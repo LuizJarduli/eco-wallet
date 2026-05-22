@@ -13,6 +13,10 @@ export const errorHandler: ErrorRequestHandler = (error, _req, res, _next) => {
     return;
   }
 
+  if (process.env.NODE_ENV !== "production") {
+    console.error("[api] unhandled error:", error);
+  }
+
   res.status(500).json({
     error: {
       code: "INTERNAL_ERROR",

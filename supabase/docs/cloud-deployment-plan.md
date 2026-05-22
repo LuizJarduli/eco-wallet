@@ -59,8 +59,8 @@ See [cloud-env-checklist.md](./cloud-env-checklist.md). Copy from Supabase Dashb
 
 | App | Required |
 |-----|----------|
-| `apps/api` | `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, optional `VISION_*`, `FCM_*`, `PORT` |
-| `apps/web` | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_API_BASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` (server only) |
+| `apps/api` | `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, optional `VISION_*`, `FCM_*`, `PORT` |
+| `apps/web` | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `NEXT_PUBLIC_API_BASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` (server only) |
 | `apps/mobile` | `--dart-define=SUPABASE_URL`, `SUPABASE_ANON_KEY`, `API_BASE_URL` |
 
 Never commit real keys. Use host-specific `.env` / CI secrets.

@@ -11,6 +11,11 @@ final class AuthInitial extends AuthState {
   const AuthInitial();
 }
 
+/// Full-screen gate while restoring an existing session on app start.
+final class AuthBootstrapping extends AuthState {
+  const AuthBootstrapping();
+}
+
 final class AuthLoading extends AuthState {
   const AuthLoading();
 }

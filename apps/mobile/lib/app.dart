@@ -83,7 +83,7 @@ class _AuthGate extends StatelessWidget {
       },
       child: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
-          if (state is AuthInitial || state is AuthLoading) {
+          if (state is AuthInitial || state is AuthBootstrapping) {
             return const Scaffold(
               body: Center(child: CircularProgressIndicator()),
             );

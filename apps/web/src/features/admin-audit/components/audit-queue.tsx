@@ -9,6 +9,7 @@ import {
   listAdminDisposals,
   type AdminDisposalItem
 } from "@/core/lib/admin-api";
+import { buttonSecondaryClassName } from "@/core/ui/form-controls";
 import { AuditForm } from "@/features/admin-audit/components/audit-form";
 import { SubmissionCard } from "@/features/admin-disposals/components/submission-card";
 import {
@@ -94,7 +95,7 @@ export const AuditQueue = ({ accessToken }: AuditQueueProps) => {
         >
           <button
             type="button"
-            className="rounded-md border border-zinc-300 px-3 py-1 text-sm"
+            className={buttonSecondaryClassName}
             onClick={() => {
               setActiveId((current) =>
                 current === submission.id ? null : submission.id

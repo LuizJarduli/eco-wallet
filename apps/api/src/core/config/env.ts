@@ -1,5 +1,6 @@
 export interface SupabaseEnv {
   supabaseUrl: string;
+  supabasePublishableKey: string;
   supabaseServiceRoleKey: string;
 }
 
@@ -20,5 +21,6 @@ export const readSupabaseEnv = (
   env: NodeJS.ProcessEnv = process.env
 ): SupabaseEnv => ({
   supabaseUrl: readRequiredEnv(env, "SUPABASE_URL"),
+  supabasePublishableKey: readRequiredEnv(env, "SUPABASE_PUBLISHABLE_KEY"),
   supabaseServiceRoleKey: readRequiredEnv(env, "SUPABASE_SERVICE_ROLE_KEY")
 });

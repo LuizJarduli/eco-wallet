@@ -8,7 +8,7 @@ export const createSupabaseServerClient = async () => {
 
   return createServerClient(
     publicEnv.supabaseUrl(),
-    publicEnv.supabaseAnonKey(),
+    publicEnv.supabasePublishableKey(),
     {
       cookies: {
         getAll() {

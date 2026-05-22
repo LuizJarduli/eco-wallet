@@ -1,14 +1,13 @@
-import type { NextConfig } from "next";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const projectDir = path.dirname(fileURLToPath(import.meta.url));
+const apiRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../..");
 
-/** Load apps/web/.env* when Turbopack root is the monorepo (Next would otherwise skip them). */
-const loadWebAppEnv = (dir: string): void => {
+/** Load apps/api/.env* (tsx/node do not load them automatically). */
+export const loadApiEnv = (): void => {
   for (const file of [".env.local", ".env"]) {
-    const filePath = path.join(dir, file);
+    const filePath = path.join(apiRoot, file);
 
     if (!fs.existsSync(filePath)) {
       continue;
@@ -37,13 +36,3 @@ const loadWebAppEnv = (dir: string): void => {
     }
   }
 };
-
-loadWebAppEnv(projectDir);
-
-const nextConfig: NextConfig = {
-  turbopack: {
-    root: path.join(projectDir, "../..")
-  }
-};
-
-export default nextConfig;

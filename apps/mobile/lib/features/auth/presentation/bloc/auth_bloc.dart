@@ -24,7 +24,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthCheckRequested event,
     Emitter<AuthState> emit,
   ) async {
-    emit(const AuthLoading());
+    emit(const AuthBootstrapping());
     try {
       final user =
           _authRepository.currentUser ?? await _authRepository.restoreSession();
@@ -42,7 +42,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthSignInRequested event,
     Emitter<AuthState> emit,
   ) async {
-    emit(const AuthLoading());
     try {
       final user = await _authRepository.signIn(
         email: event.email,
@@ -62,7 +61,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthSignUpRequested event,
     Emitter<AuthState> emit,
   ) async {
-    emit(const AuthLoading());
     try {
       final user = await _authRepository.signUp(
         email: event.email,

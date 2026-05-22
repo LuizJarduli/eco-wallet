@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { publicEnv, serverEnv } from "@/core/config/env";
 import { createSupabaseServerClient } from "@/core/lib/supabase-server";
 import { resolveAdminAccessForUser } from "@/features/admin-auth/services/admin-access";
+import { disposalPhotoPlaceholderPath } from "@/features/admin-disposals/constants";
 
 export async function GET(request: Request) {
   const path = new URL(request.url).searchParams.get("path");
@@ -53,9 +54,8 @@ export async function GET(request: Request) {
     .createSignedUrl(path, 600);
 
   if (error || !data?.signedUrl) {
-    return NextResponse.json(
-      { error: "Não foi possível gerar URL da foto." },
-      { status: 404 }
+    return NextResponse.redirect(
+      new URL(disposalPhotoPlaceholderPath, request.url)
     );
   }
 

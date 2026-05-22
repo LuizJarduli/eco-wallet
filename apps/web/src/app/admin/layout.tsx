@@ -16,10 +16,16 @@ export default function AdminLayout({
             <h1 className="text-lg font-semibold text-zinc-900">Backoffice</h1>
           </div>
           <nav className="flex gap-3 text-sm font-medium">
-            <Link href="/admin/verificacao" className="text-zinc-700 hover:text-zinc-900">
+            <Link
+              href="/admin/verificacao"
+              className="font-semibold text-zinc-900 hover:text-emerald-800"
+            >
               Verificação
             </Link>
-            <Link href="/admin/auditoria" className="text-zinc-700 hover:text-zinc-900">
+            <Link
+              href="/admin/auditoria"
+              className="font-semibold text-zinc-900 hover:text-emerald-800"
+            >
               Auditoria
             </Link>
           </nav>

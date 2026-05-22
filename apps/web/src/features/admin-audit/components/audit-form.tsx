@@ -4,6 +4,11 @@ import { useState } from "react";
 
 import { AdminApiError } from "@/core/lib/admin-api";
 import { ApiErrorBanner } from "@/core/ui/api-error-banner";
+import {
+  buttonSuccessClassName,
+  formFieldClassName,
+  formLabelClassName
+} from "@/core/ui/form-controls";
 
 interface AuditFormProps {
   onSubmit: (auditedLiters: number) => Promise<void>;
@@ -33,12 +38,12 @@ export const AuditForm = ({
       }}
     >
       <label className="flex flex-col gap-1 text-sm">
-        <span className="font-medium text-zinc-700">Litros coletados</span>
+        <span className={formLabelClassName}>Litros coletados</span>
         <input
           type="number"
           min={0.1}
           step={0.1}
-          className="rounded-md border border-zinc-300 px-3 py-2"
+          className={formFieldClassName}
           value={auditedLiters}
           onChange={(event) => setAuditedLiters(event.target.value)}
         />
@@ -49,7 +54,7 @@ export const AuditForm = ({
       <button
         type="submit"
         disabled={isSubmitting}
-        className="rounded-md bg-emerald-700 px-4 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:bg-emerald-300"
+        className={buttonSuccessClassName}
       >
         {isSubmitting ? "Auditando..." : "Confirmar coleta e liberar moedas"}
       </button>

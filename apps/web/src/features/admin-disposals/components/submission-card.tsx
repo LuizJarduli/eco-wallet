@@ -1,7 +1,9 @@
 "use client";
 
 import type { AdminDisposalItem } from "@/core/lib/admin-api";
+import { DisposalPhoto } from "@/features/admin-disposals/components/disposal-photo";
 import {
+  disposalPhotoPlaceholderPath,
   disposalStatusLabels,
   reviewPriorityLabels
 } from "@/features/admin-disposals/constants";
@@ -26,7 +28,7 @@ export const SubmissionCard = ({
         <h3 className="text-base font-semibold text-zinc-900">
           Descarte {submission.id.slice(0, 8)}
         </h3>
-        <p className="text-sm text-zinc-500">
+        <p className="text-sm text-zinc-700">
           Enviado em {new Date(submission.submittedAt).toLocaleString("pt-BR")}
         </p>
       </div>
@@ -42,39 +44,30 @@ export const SubmissionCard = ({
 
     <div className="grid gap-4 md:grid-cols-[180px_1fr]">
       <div className="overflow-hidden rounded-lg border border-zinc-200 bg-zinc-50">
-        {photoUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={photoUrl}
-            alt="Foto do descarte"
-            className="h-44 w-full object-cover"
-          />
-        ) : (
-          <div className="flex h-44 items-center justify-center px-3 text-center text-sm text-zinc-500">
-            Foto indisponível
-          </div>
-        )}
+        <DisposalPhoto
+          photoUrl={photoUrl ?? disposalPhotoPlaceholderPath}
+        />
       </div>
 
       <dl className="grid grid-cols-2 gap-3 text-sm">
         <div>
-          <dt className="text-zinc-500">Confiança (óleo)</dt>
+          <dt className="font-medium text-zinc-700">Confiança (óleo)</dt>
           <dd className="font-medium text-zinc-900">
             {formatScore(submission.oilScore)}
           </dd>
         </div>
         <div>
-          <dt className="text-zinc-500">Confiança (local)</dt>
+          <dt className="font-medium text-zinc-700">Confiança (local)</dt>
           <dd className="font-medium text-zinc-900">
             {formatScore(submission.locationScore)}
           </dd>
         </div>
         <div>
-          <dt className="text-zinc-500">Status da análise</dt>
+          <dt className="font-medium text-zinc-700">Status da análise</dt>
           <dd className="font-medium text-zinc-900">{submission.confidenceStatus}</dd>
         </div>
         <div>
-          <dt className="text-zinc-500">Litros estimados</dt>
+          <dt className="font-medium text-zinc-700">Litros estimados</dt>
           <dd className="font-medium text-zinc-900">
             {submission.estimatedLiters ?? "—"}
           </dd>

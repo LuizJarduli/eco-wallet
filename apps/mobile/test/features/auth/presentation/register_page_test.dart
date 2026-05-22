@@ -25,9 +25,9 @@ void main() {
     when(() => authBloc.add(any())).thenReturn(null);
   });
 
-  testWidgets('register button is disabled while loading', (tester) async {
-    when(() => authBloc.state).thenReturn(const AuthLoading());
-
+  testWidgets('register button shows loading indicator while submitting', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       MaterialApp(
         home: BlocProvider<AuthBloc>.value(
@@ -36,6 +36,14 @@ void main() {
         ),
       ),
     );
+
+    await tester.enterText(
+      find.byType(TextFormField).at(0),
+      'novo@ecowallet.test',
+    );
+    await tester.enterText(find.byType(TextFormField).at(1), 'demo123456');
+    await tester.tap(find.text('Cadastrar'));
+    await tester.pump();
 
     final button = tester.widget<ElevatedButton>(find.byType(ElevatedButton));
     expect(button.onPressed, isNull);
