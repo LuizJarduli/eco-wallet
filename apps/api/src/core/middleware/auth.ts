@@ -32,6 +32,17 @@ export const authenticateJwt = (
       req.userId = userId;
       next();
     } catch (error) {
+      if (error instanceof Error && error.message.startsWith("Missing required environment variable:")) {
+        next(
+          new AppError(
+            "INTERNAL_ERROR",
+            500,
+            "Server Supabase configuration is incomplete."
+          )
+        );
+        return;
+      }
+
       next(error);
     }
   };

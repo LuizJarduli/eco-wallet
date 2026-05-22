@@ -6,6 +6,7 @@ alwaysApply: false
 
 # React And Next.js Standards
 
+- All user-visible strings MUST be **pt-BR**. See `.agents/rules/locale_pt_br_user_ui.mdc` for copy and formatting rules.
 - Prefer TypeScript, functional components, hooks, and composition over inheritance.
 - Keep components small and focused. Extract reusable UI into colocated components only when reuse or readability justifies it.
 - Use `PascalCase` for components, `camelCase` for functions and variables, and `kebab-case` or `snake_case` only when required by framework conventions.

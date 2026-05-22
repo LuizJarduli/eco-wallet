@@ -5,6 +5,7 @@ import type {
 
 import { AppError } from "../../core/errors/app-error.js";
 import { logger, type Logger } from "../../core/logger/logger.js";
+import type { NotificationService } from "../notifications/notification.service.js";
 import type { ReviewPriority } from "./disposal.schema.js";
 
 export interface DisposalSubmission {
@@ -116,7 +117,8 @@ const assertTransition = (
 
 export const createDisposalAdminService = (
   repository: DisposalRepository,
-  log: Logger = logger
+  log: Logger = logger,
+  notifications?: NotificationService
 ): DisposalAdminService => ({
   async approve(submissionId, adminId, estimatedLiters) {
     const submission = await ensureSubmission(repository, submissionId);
@@ -164,6 +166,22 @@ export const createDisposalAdminService = (
       auditedLiters: null,
       coinsReleased: 0
     });
+
+    if (notifications) {
+      try {
+        await notifications.sendRejection({
+          reasonCode,
+          submissionId,
+          userId: submission.userId
+        });
+      } catch (error) {
+        log.error("rejection push dispatch failed", {
+          error,
+          submissionId,
+          userId: submission.userId
+        });
+      }
+    }
   },
 
   async auditCollection(submissionId, adminId, auditedLiters) {

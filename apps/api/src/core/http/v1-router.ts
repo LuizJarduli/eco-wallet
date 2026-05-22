@@ -8,6 +8,10 @@ import {
   createDisposalRoutes,
   type DisposalRoutesDependencies
 } from "../../features/disposals/disposal.routes.js";
+import {
+  createRewardsRoutes,
+  type RewardsRoutesDependencies
+} from "../../features/rewards/rewards.routes.js";
 import { authenticateJwt } from "../middleware/auth.js";
 import { requireAdmin } from "../middleware/require-admin.js";
 import type { SupabaseJwtVerifier } from "../supabase/auth-user.service.js";
@@ -15,7 +19,8 @@ import type { ProfileRoleLookup } from "../supabase/profile-role.service.js";
 
 export interface V1RouterDependencies
   extends DisposalRoutesDependencies,
-    ConfidenceRoutesDependencies {
+    ConfidenceRoutesDependencies,
+    RewardsRoutesDependencies {
   jwtVerifier?: SupabaseJwtVerifier;
   profileRoleLookup?: ProfileRoleLookup;
 }
@@ -28,7 +33,9 @@ export const createV1Router = ({
   disposalAdminService,
   disposalRepository,
   jwtVerifier,
-  profileRoleLookup
+  profileRoleLookup,
+  rewardsRepository,
+  scratchRewardsService
 }: V1RouterDependencies = {}): Router => {
   const router = Router();
   const adminRouter = Router();
@@ -61,6 +68,15 @@ export const createV1Router = ({
       confidenceService,
       jwtVerifier,
       profileRoleLookup
+    })
+  );
+  router.use(
+    "/rewards",
+    createRewardsRoutes({
+      jwtVerifier,
+      profileRoleLookup,
+      rewardsRepository,
+      scratchRewardsService
     })
   );
 

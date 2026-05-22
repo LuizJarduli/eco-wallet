@@ -4,7 +4,7 @@ Use this file as the entry point for agent work in this repository. Before makin
 
 ## General Behavior
 
-- Work in English.
+- Work in English for agent output, docs, commits, and PR descriptions.
 - Keep solutions simple and maintainable: follow KISS, DRY, and SOLID without over-engineering.
 - Prefer existing project patterns over introducing new architecture.
 - Do not revert user changes unless explicitly requested.
@@ -27,7 +27,11 @@ Read the relevant rule before editing files in that stack:
   - Use for `**/*.{ts,js}` API/backend work.
   - Applies REST resource design, route/controller/service/repository separation, validation, errors, logging, and tests.
 
-If multiple rules match, apply the most specific one for the files being edited. For example, use the Next.js rule for frontend `tsx` files and the Node.js REST API rule for backend API handlers or services.
+- User-facing locale: `.agents/rules/locale_pt_br_user_ui.mdc`
+  - Use for `apps/mobile/**/*.dart` and `**/*.{tsx,jsx}` when adding or changing copy users see in the app.
+  - Requires Brazilian Portuguese (`pt-BR`) for all user-visible strings.
+
+If multiple rules match, apply the most specific one for the files being edited. For UI files, also apply the locale rule whenever the change includes user-visible text. For example, use the Next.js rule for frontend `tsx` files and the Node.js REST API rule for backend API handlers or services.
 
 ## Pull Request, Branch, and Linear Workflow
 
@@ -37,6 +41,12 @@ If multiple rules match, apply the most specific one for the files being edited.
 - Use semantic branch names that include the issue key or task number and a short slug, such as `feature/LIN-123-carbon-wallet`, `fix/LIN-123-login-error`, or `chore/task-02-linear-pr-workflow-skill`.
 - Before claiming completion, run the relevant verification. Use `cy-final-verify` when fresh evidence is required.
 - For review rounds or fixing review feedback, use the dedicated Compozy review skills under `.agents/skills/`.
+
+## User-Facing Language
+
+- Eco Wallet is a Brazilian app: all end-user UI copy MUST be **pt-BR** only.
+- Read `.agents/rules/locale_pt_br_user_ui.mdc` before adding or changing labels, messages, or any text shown in the mobile or web app.
+- PRDs, tasks, and agent communication stay in English; do not write English strings into user-facing screens.
 
 ## Design System
 
