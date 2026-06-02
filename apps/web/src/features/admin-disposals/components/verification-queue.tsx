@@ -2,7 +2,7 @@
 "use client";
 
 import type { DisposalStatus } from "@eco-wallet/domain";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import {
   AdminApiError,
@@ -20,10 +20,7 @@ import {
 } from "@/features/admin-disposals/components/queue-filters";
 import { RejectForm } from "@/features/admin-disposals/components/reject-form";
 import { SubmissionCard } from "@/features/admin-disposals/components/submission-card";
-import {
-  buildPhotoUrl,
-  useStoragePaths
-} from "@/features/admin-disposals/hooks/use-storage-paths";
+import { buildPhotoUrl } from "@/features/admin-disposals/hooks/use-storage-paths";
 
 interface VerificationQueueProps {
   accessToken: string;
@@ -75,9 +72,6 @@ export const VerificationQueue = ({ accessToken }: VerificationQueueProps) => {
     void loadQueue();
   }, [loadQueue]);
 
-  const submissionIds = useMemo(() => items.map((item) => item.id), [items]);
-  const storagePaths = useStoragePaths(submissionIds);
-
   return (
     <div className="flex flex-col gap-6">
       <QueueFilters value={filters} onFilterChange={setFilters} />
@@ -108,8 +102,8 @@ export const VerificationQueue = ({ accessToken }: VerificationQueueProps) => {
           key={submission.id}
           submission={submission}
           photoUrl={
-            storagePaths[submission.id]
-              ? buildPhotoUrl(storagePaths[submission.id])
+            submission.storagePath
+              ? buildPhotoUrl(submission.storagePath)
               : null
           }
         >

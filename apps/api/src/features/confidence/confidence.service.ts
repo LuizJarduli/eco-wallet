@@ -9,7 +9,7 @@ import type {
   DropOffPoint,
   ReviewPriority
 } from "./confidence.types.js";
-import { VisionConfidenceScorer } from "./vision-confidence.scorer.js";
+import { createConfidenceScorer } from "./create-confidence-scorer.js";
 
 export interface ConfidenceScoreResponse {
   submission: ConfidenceSubmission;
@@ -155,7 +155,7 @@ const errorMessage = (error: unknown): string =>
 
 export const createConfidenceService = (
   repository: ConfidenceRepository,
-  scorer: ConfidenceScorer = new VisionConfidenceScorer(),
+  scorer: ConfidenceScorer = createConfidenceScorer(),
   retryOptions: Partial<RetryOptions> = {},
   log: Logger = logger
 ): ConfidenceService => {

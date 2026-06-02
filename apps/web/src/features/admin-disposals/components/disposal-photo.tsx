@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { disposalPhotoPlaceholderPath } from "@/features/admin-disposals/constants";
 
@@ -16,6 +16,10 @@ export const DisposalPhoto = ({
   className = "h-44 w-full object-cover"
 }: DisposalPhotoProps) => {
   const [src, setSrc] = useState(photoUrl ?? disposalPhotoPlaceholderPath);
+
+  useEffect(() => {
+    setSrc(photoUrl ?? disposalPhotoPlaceholderPath);
+  }, [photoUrl]);
 
   return (
     // eslint-disable-next-line @next/next/no-img-element

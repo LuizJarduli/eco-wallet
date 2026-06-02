@@ -1,4 +1,7 @@
+import 'dart:developer' as developer;
+
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 
@@ -63,7 +66,8 @@ class DisposalBloc extends Bloc<DisposalEvent, DisposalState> {
       );
     } on DisposalException catch (error) {
       emit(DisposalFailure(error.message));
-    } catch (_) {
+    } catch (error, stackTrace) {
+      _logHandlerFailure('DisposalStarted', error, stackTrace);
       emit(
         const DisposalFailure(
           'Não foi possível carregar os pontos de descarte. Tente novamente.',
@@ -190,8 +194,12 @@ class DisposalBloc extends Bloc<DisposalEvent, DisposalState> {
           submissionId: submission.id,
           accessToken: accessToken,
         );
-      } on DisposalException {
+      } on DisposalException catch (error, stackTrace) {
         scoringTriggered = false;
+        _logHandlerFailure('requestConfidenceScore', error, stackTrace);
+      } catch (error, stackTrace) {
+        scoringTriggered = false;
+        _logHandlerFailure('requestConfidenceScore', error, stackTrace);
       }
 
       emit(
@@ -202,12 +210,26 @@ class DisposalBloc extends Bloc<DisposalEvent, DisposalState> {
       );
     } on DisposalException catch (error) {
       emit(DisposalFailure(error.message));
-    } catch (_) {
+    } catch (error, stackTrace) {
+      _logHandlerFailure('DisposalSubmitRequested', error, stackTrace);
       emit(
         const DisposalFailure(
           'Não foi possível enviar o descarte. Tente novamente.',
         ),
       );
     }
+  }
+
+  void _logHandlerFailure(String handler, Object error, StackTrace stackTrace) {
+    if (!kDebugMode) {
+      return;
+    }
+
+    developer.log(
+      '$handler failed: $error',
+      name: 'DisposalBloc',
+      error: error,
+      stackTrace: stackTrace,
+    );
   }
 }

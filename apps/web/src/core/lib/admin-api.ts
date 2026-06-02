@@ -21,7 +21,7 @@ export interface AdminDisposalItem {
   reviewPriority: ReviewPriority;
   submittedAt: string;
   updatedAt: string;
-  storagePath?: string | null;
+  storagePath: string;
 }
 
 export interface ListAdminDisposalsFilters {

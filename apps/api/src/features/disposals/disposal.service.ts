@@ -33,7 +33,9 @@ export interface AdminDisposalListFilters {
   priority?: ReviewPriority;
 }
 
-export type AdminDisposalListItem = DisposalSubmission;
+export interface AdminDisposalListItem extends DisposalSubmission {
+  storagePath: string;
+}
 
 export interface AuditResult {
   coinsReleased: number;

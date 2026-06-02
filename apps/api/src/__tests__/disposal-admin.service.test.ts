@@ -39,8 +39,8 @@ interface LedgerEntry {
 }
 
 const createSubmission = (
-  overrides: Partial<DisposalSubmission> = {}
-): DisposalSubmission => ({
+  overrides: Partial<AdminDisposalListItem> = {}
+): AdminDisposalListItem => ({
   confidenceStatus: "pending",
   estimatedLiters: null,
   id: "submission-1",
@@ -49,6 +49,7 @@ const createSubmission = (
   rejectionReason: null,
   reviewPriority: "normal",
   status: "submitted",
+  storagePath: "member-1/submission-1.jpg",
   submittedAt: "2026-05-17T20:00:00.000Z",
   updatedAt: "2026-05-17T20:00:00.000Z",
   userId: "member-1",
@@ -72,7 +73,7 @@ class InMemoryDisposalRepository implements DisposalRepository {
   readonly wallets = new Map<string, Wallet>();
 
   constructor(
-    private readonly submissions: DisposalSubmission[],
+    private readonly submissions: AdminDisposalListItem[],
     private readonly rewardRule: RewardRule = {
       coinsPerLiter: 10,
       id: "rule-1",

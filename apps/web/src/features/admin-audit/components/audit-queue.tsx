@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/set-state-in-effect -- queue reloads from async API responses */
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import {
   AdminApiError,
@@ -12,10 +12,7 @@ import {
 import { buttonSecondaryClassName } from "@/core/ui/form-controls";
 import { AuditForm } from "@/features/admin-audit/components/audit-form";
 import { SubmissionCard } from "@/features/admin-disposals/components/submission-card";
-import {
-  buildPhotoUrl,
-  useStoragePaths
-} from "@/features/admin-disposals/hooks/use-storage-paths";
+import { buildPhotoUrl } from "@/features/admin-disposals/hooks/use-storage-paths";
 
 interface AuditQueueProps {
   accessToken: string;
@@ -55,9 +52,6 @@ export const AuditQueue = ({ accessToken }: AuditQueueProps) => {
     void loadQueue();
   }, [loadQueue]);
 
-  const submissionIds = useMemo(() => items.map((item) => item.id), [items]);
-  const storagePaths = useStoragePaths(submissionIds);
-
   return (
     <div className="flex flex-col gap-6">
       {successMessage ? (
@@ -88,8 +82,8 @@ export const AuditQueue = ({ accessToken }: AuditQueueProps) => {
           key={submission.id}
           submission={submission}
           photoUrl={
-            storagePaths[submission.id]
-              ? buildPhotoUrl(storagePaths[submission.id])
+            submission.storagePath
+              ? buildPhotoUrl(submission.storagePath)
               : null
           }
         >

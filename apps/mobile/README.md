@@ -24,6 +24,8 @@ SUPABASE_PUBLISHABLE_KEY=your-publishable-key
 API_BASE_URL=http://127.0.0.1:3001
 ```
 
+`API_BASE_URL` must be reachable from the device that runs the app. `localhost` / `127.0.0.1` only work on the same machine (simulator or desktop). On a **physical device**, use your computer’s LAN IP (e.g. `http://192.168.0.42:3001`) and keep `pnpm dev` running for the API. Android emulator: `http://10.0.2.2:3001`.
+
 Use the **publishable** key from Supabase Dashboard → Settings → API (not a legacy/invalid anon key). For local Supabase, copy values from `pnpm dlx supabase status`. See [`supabase/README.md`](../../supabase/README.md).
 
 Without URL + key, the app shows a configuration screen instead of the auth flow.

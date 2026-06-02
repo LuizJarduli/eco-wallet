@@ -29,10 +29,14 @@ const readVisionEnv = (env: NodeJS.ProcessEnv = process.env) => {
 };
 
 export class HttpVisionProvider implements VisionProvider {
+  private readonly config: ReturnType<typeof readVisionEnv>;
+
   constructor(
-    private readonly config = readVisionEnv(),
+    config?: ReturnType<typeof readVisionEnv>,
     private readonly fetcher: typeof fetch = fetch
-  ) {}
+  ) {
+    this.config = config ?? readVisionEnv();
+  }
 
   async analyzeOilLikelihood(imageUrl: string): Promise<VisionProviderResult> {
     const response = await this.fetcher(this.config.endpoint, {

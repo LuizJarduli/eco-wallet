@@ -32,6 +32,10 @@ interface DisposalSubmissionRow {
   updated_at: string;
 }
 
+interface AdminDisposalSubmissionRow extends DisposalSubmissionRow {
+  storage_path: string;
+}
+
 interface RewardRuleRow {
   id: string;
   coins_per_liter: number;
@@ -66,6 +70,11 @@ const toSubmission = (row: DisposalSubmissionRow): DisposalSubmission => ({
   reviewPriority: row.review_priority,
   submittedAt: row.submitted_at,
   updatedAt: row.updated_at
+});
+
+const toAdminListItem = (row: AdminDisposalSubmissionRow): AdminDisposalListItem => ({
+  ...toSubmission(row),
+  storagePath: row.storage_path
 });
 
 const toRewardRule = (row: RewardRuleRow): RewardRule => ({
@@ -254,7 +263,8 @@ export class SupabaseDisposalRepository implements DisposalRepository {
           "location_score",
           "review_priority",
           "submitted_at",
-          "updated_at"
+          "updated_at",
+          "storage_path"
         ].join(",")
       )
       .order("submitted_at", { ascending: false });
@@ -267,12 +277,12 @@ export class SupabaseDisposalRepository implements DisposalRepository {
       query = query.eq("review_priority", filters.priority);
     }
 
-    const { data, error } = await query.returns<DisposalSubmissionRow[]>();
+    const { data, error } = await query.returns<AdminDisposalSubmissionRow[]>();
 
     if (error) {
       throwIfDomainRpcError(error);
     }
 
-    return (data ?? []).map(toSubmission);
+    return (data ?? []).map(toAdminListItem);
   }
 }

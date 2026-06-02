@@ -354,5 +354,31 @@ void main() {
             ),
           ],
     );
+
+    blocTest<DisposalBloc, DisposalState>(
+      'emits success with scoringTriggered false when score API throws',
+      build: buildBloc,
+      seed: seedForm,
+      act: (bloc) => bloc.add(const DisposalSubmitRequested()),
+      setUp: () {
+        when(
+          () => disposalRepository.createSubmission(any()),
+        ).thenAnswer((_) async => submission);
+        when(
+          () => disposalRepository.requestConfidenceScore(
+            submissionId: any(named: 'submissionId'),
+            accessToken: any(named: 'accessToken'),
+          ),
+        ).thenThrow(Exception('Connection refused'));
+      },
+      expect:
+          () => [
+            seedForm().copyWith(isSubmitting: true),
+            DisposalSubmitSuccess(
+              submission: submission,
+              scoringTriggered: false,
+            ),
+          ],
+    );
   });
 }

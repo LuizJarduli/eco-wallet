@@ -26,13 +26,20 @@ class DisposalApiClient {
     }
 
     final uri = Uri.parse('$_baseUrl/v1/disposals/$submissionId/score');
-    final response = await _httpClient.post(
-      uri,
-      headers: {
-        'Authorization': 'Bearer $accessToken',
-        'Content-Type': 'application/json',
-      },
-    );
+    final http.Response response;
+    try {
+      response = await _httpClient.post(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+          'Content-Type': 'application/json',
+        },
+      );
+    } on http.ClientException {
+      throw const DisposalException(
+        'Não foi possível conectar ao servidor de análise. Verifique sua conexão.',
+      );
+    }
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
       return;

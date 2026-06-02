@@ -1,8 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:eco_wallet/app.dart';
+import 'package:eco_wallet/core/bloc/app_bloc_observer.dart';
 import 'package:eco_wallet/core/constants/env.dart';
 import 'package:eco_wallet/core/notifications/device_token_registrar.dart';
 import 'package:eco_wallet/core/notifications/device_token_repository.dart';
@@ -17,6 +19,7 @@ import 'package:eco_wallet/features/wallet/data/repositories/supabase_wallet_rep
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Bloc.observer = const AppBlocObserver();
 
   if (!Env.isConfigured) {
     runApp(const _MissingConfigApp());
