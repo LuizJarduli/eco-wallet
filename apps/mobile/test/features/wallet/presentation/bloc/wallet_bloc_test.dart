@@ -192,4 +192,39 @@ void main() {
       verify(() => walletRepository.fetchWallet(userId: userId)).called(1);
     },
   );
+
+  blocTest<WalletBloc, WalletState>(
+    'realtime submission prepends new disposal to history',
+    build: buildBloc,
+    act: (bloc) async {
+      bloc.add(const WalletStarted(userId));
+      await bloc.stream.firstWhere((state) => state is WalletReady);
+
+      bloc.add(
+        WalletRealtimeSubmissionUpdated(
+          DisposalSubmission(
+            id: 'submission-new',
+            dropOffId: 'drop-1',
+            storagePath: 'user-1/submission-new.jpg',
+            status: DisposalStatus.submitted,
+            submittedAt: submittedAt,
+            updatedAt: updatedAt,
+            dropOffName: 'Cozinha Principal',
+          ),
+        ),
+      );
+    },
+    expect:
+        () => [
+          const WalletLoading(),
+          isA<WalletReady>(),
+          isA<WalletReady>()
+              .having((s) => s.submissions.length, 'length', 2)
+              .having(
+                (s) => s.submissions.first.id,
+                'first id',
+                'submission-new',
+              ),
+        ],
+  );
 }

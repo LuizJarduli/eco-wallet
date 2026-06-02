@@ -88,7 +88,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     disposalRepository: routeContext.read<DisposalRepository>(),
                     locationProvider: GeolocatorDisposalLocationProvider(),
                   ),
-              child: DisposalSubmissionPage(userId: authState.user.id),
+              child: DisposalSubmissionPage(
+                userId: authState.user.id,
+                onSubmissionSuccess: (submission) {
+                  context.read<WalletBloc>().add(
+                    WalletRealtimeSubmissionUpdated(submission),
+                  );
+                },
+              ),
             ),
       ),
     );

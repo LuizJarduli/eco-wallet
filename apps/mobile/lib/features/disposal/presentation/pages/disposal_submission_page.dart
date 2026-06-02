@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 
 import 'package:eco_wallet/core/theme/app_colors.dart';
 import 'package:eco_wallet/core/widgets/eco_primary_button.dart';
+import 'package:eco_wallet/features/disposal/domain/entities/disposal_submission.dart';
 import 'package:eco_wallet/features/disposal/domain/entities/drop_off_point.dart';
 import 'package:eco_wallet/features/disposal/domain/repositories/disposal_repository.dart';
 import 'package:eco_wallet/features/disposal/presentation/bloc/disposal_bloc.dart';
@@ -12,9 +13,14 @@ import 'package:eco_wallet/features/disposal/presentation/pages/disposal_detail_
 import 'package:eco_wallet/features/disposal/presentation/widgets/disposal_step_indicator.dart';
 
 class DisposalSubmissionPage extends StatefulWidget {
-  const DisposalSubmissionPage({required this.userId, super.key});
+  const DisposalSubmissionPage({
+    required this.userId,
+    this.onSubmissionSuccess,
+    super.key,
+  });
 
   final String userId;
+  final void Function(DisposalSubmission submission)? onSubmissionSuccess;
 
   @override
   State<DisposalSubmissionPage> createState() => _DisposalSubmissionPageState();
@@ -41,6 +47,7 @@ class _DisposalSubmissionPageState extends State<DisposalSubmissionPage> {
     return BlocConsumer<DisposalBloc, DisposalState>(
       listener: (context, state) {
         if (state is DisposalSubmitSuccess) {
+          widget.onSubmissionSuccess?.call(state.submission);
           Navigator.of(context).pushReplacement(
             MaterialPageRoute<void>(
               builder:
